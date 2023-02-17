@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+
+    <h2>hello this test page</h2>
+
+    <title>Document Upload</title>
+    <style>
+      input[type="file"] {
+        display: none;
+      }
+
+      .custom-file-upload {
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      .custom-file-upload:hover {
+        background-color: #f1f1f1;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <label for="file-upload" class="custom-file-upload">
+        Choose file
+      </label>
+      <input
+        id="file-upload"
+        type="file"
+        accept=".pdf,.doc,.docx"
+        onchange="handleFileInput(event)"
+      />
+      <button onclick="handleUpload()">Upload</button>
+    </div>
+    <script>
+      let selectedFile = null;
+
+      function handleFileInput(event) {
+        selectedFile = event.target.files[0];
+      }
+
+      function handleUpload() {
+        if (!selectedFile) {
+          alert("Please select a file to upload.");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        fetch("/upload", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            // do something with the response
+          })
+          .catch((error) => {
+            console.log(error);
+            // handle error
+          });
+      }
+    </script>
+  </body>
+</html>
+
